@@ -82,6 +82,9 @@ class Parser {
         return statements;
     }
 
+    /**
+     * assignment     → IDENTIFIER "=" assignment | ternary ;
+     */
     private Expr assignment() {
         Expr expr = ternary();
 
@@ -90,7 +93,7 @@ class Parser {
             Expr value = assignment();
 
             if (expr instanceof Expr.Variable) {
-                Token name = ((Expr.Variable)expr).name;
+                Token name = ((Expr.Variable) expr).name;
                 return new Expr.Assign(name, value);
             }
 
@@ -101,7 +104,7 @@ class Parser {
     }
 
     /**
-     * ternary       → equality ("?" equality ":" equality)+  ;
+     * ternary       → equality ("?" equality ":" equality)+ ;
      */
     private Expr ternary() {
         Expr left = equality();

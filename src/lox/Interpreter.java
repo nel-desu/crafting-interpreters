@@ -8,6 +8,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     void interpret(List<Stmt> statements) {
         try {
+            // 如果输入了一个表达式，则对表达式求值并显示结果值
+            if (statements.size() == 1 && statements.get(0) instanceof Stmt.Expression) {
+                Object value = evaluate(((Stmt.Expression) statements.get(0)).expression);
+                System.out.println(value);
+                return;
+            }
+
+            // 执行语句
             for (Stmt statement: statements) {
                 execute(statement);
             }
