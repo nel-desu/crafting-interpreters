@@ -4,18 +4,33 @@ import java.util.List;
 
 abstract class Expr {
     interface Visitor<R> {
+        R visitAssignExpr(Assign expr);
         R visitBinaryExpr(Binary expr);
         R visitGroupingExpr(Grouping expr);
         R visitLiteralExpr(Literal expr);
         R visitUnaryExpr(Unary expr);
-        R visitTernaryExpr(Ternary ternary);
+        R visitTernaryExpr(Ternary expr);
+        R visitVariableExpr(Variable expr);
     }
     abstract <R> R accept(Visitor<R> visitor);
 
-    /**
-     * Binary
-     * 二元表达式
-     */
+    // Assign
+    static class Assign extends Expr {
+        Assign(Token name, Expr value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        final Token name;
+        final Expr value;
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitAssignExpr(this);
+        }
+    }
+
+    // Binary
     static class Binary extends Expr {
         Binary(Expr left, Token operator, Expr right) {
             this.left = left;
@@ -33,10 +48,7 @@ abstract class Expr {
         }
     }
 
-    /**
-     * Grouping
-     * 分组
-     */
+    // Grouping
     static class Grouping extends Expr {
         Grouping(Expr expression) {
             this.expression = expression;
@@ -50,10 +62,7 @@ abstract class Expr {
         }
     }
 
-    /**
-     * Literal
-     * 字面量
-     */
+    // Literal
     static class Literal extends Expr {
         Literal(Object value) {
             this.value = value;
@@ -67,10 +76,7 @@ abstract class Expr {
         }
     }
 
-    /**
-     * Unary
-     * 一元操作符
-     */
+    // Unary
     static class Unary extends Expr {
         Unary(Token operator, Expr right) {
             this.operator = operator;
@@ -86,28 +92,39 @@ abstract class Expr {
         }
     }
 
-    /**
-     * Ternary
-     * 三元操作符
-     */
+    // Ternary
     static class Ternary extends Expr {
-        Ternary(Expr left, Token op1, Expr center, Token op2, Expr right) {
-            this.op1 = op1;
-            this.op2 = op2;
+        Ternary(Expr left, Token operator1, Expr center, Token operator2, Expr right) {
             this.left = left;
+            this.operator1 = operator1;
             this.center = center;
+            this.operator2 = operator2;
             this.right = right;
         }
 
-        final Token op1;
-        final Token op2;
         final Expr left;
+        final Token operator1;
         final Expr center;
+        final Token operator2;
         final Expr right;
 
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitTernaryExpr(this);
+        }
+    }
+
+    // Variable
+    static class Variable extends Expr {
+        Variable(Token name) {
+            this.name = name;
+        }
+
+        final Token name;
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitVariableExpr(this);
         }
     }
 

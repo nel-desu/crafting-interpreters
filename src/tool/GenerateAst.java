@@ -14,11 +14,24 @@ public class GenerateAst {
 //        }
         String outputDir = "C:\\Users\\Administrator\\SRIT\\IDEAProject\\crafting-interpreters\\src\\lox";
 
+        // 表达式
         defineAst(outputDir, "Expr", Arrays.asList(
+                // 赋值表达式
+                "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
-                "Unary    : Token operator, Expr right"
+                "Unary    : Token operator, Expr right",
+                "Ternary  : Expr left, Token operator1, Expr center, Token operator2, Expr right",
+                "Variable : Token name"
+        ));
+
+        // 语句
+        defineAst(outputDir, "Stmt", Arrays.asList(
+                "Block      : List<Stmt> statements",
+                "Expression : Expr expression",
+                "Var        : Token name, Expr initializer",
+                "Print      : Expr expression"
         ));
     }
 
